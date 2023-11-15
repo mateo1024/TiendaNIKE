@@ -239,7 +239,7 @@ public class FXMLDocumentController implements Initializable {
             // Mostrar mensaje de advertencia si no hay compras en el historial
             Alert alerta = new Alert(Alert.AlertType.INFORMATION);
             alerta.setHeaderText("Historial de Compras");
-            alerta.setContentText("Listado.");
+            alerta.setContentText("No hay compras registradas");
             alerta.showAndWait();
         } else {
             // Crear una cadena que contenga el historial de compras
@@ -589,6 +589,8 @@ public class FXMLDocumentController implements Initializable {
             +"El Total es:"+(productoSeleccionado.getPrecio() * cantidadComprar));
             alerta.showAndWait();
         tabla.refresh();
+        historiall.add("Compra: "+productoSeleccionado.getTipo()+"\n"+"Cantidad: "+productoSeleccionado.getUnidades()+"\n"
+                +"Total: "+(productoSeleccionado.getPrecio() * cantidadComprar));
     }
 
 }
