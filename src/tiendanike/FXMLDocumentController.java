@@ -17,7 +17,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -27,6 +31,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 /**
  *
@@ -331,7 +336,20 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void ventanaproductos(ActionEvent event) {
+    private void ventanaproductos(ActionEvent event)throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        openWindow("VentanaSueters.fxml", stage);
+    }
+    private void openWindow(String fxmlFileName, Stage stage) throws IOException {
+        // Crear un nuevo cargador de FXML
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
+        // Cargar el archivo FXML y asignarlo como la raíz de la ventana
+        Parent root = loader.load();
+        // Crear una nueva escena con la raíz cargada
+        Scene scene = new Scene(root);
+        // Establecer la nueva escena como la escena de la ventana
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML
