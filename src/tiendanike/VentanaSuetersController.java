@@ -40,7 +40,7 @@ public class VentanaSuetersController implements Initializable {
     @FXML
     private void VentanaPrin(ActionEvent event) throws IOException{
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        openWindow("VentanaSueters.fxml", stage);
+        openWindow("VentanaPrincipal.fxml", stage);
     }
     
     private void openWindow(String fxmlFileName, Stage stage) throws IOException {
