@@ -15,12 +15,12 @@ public class nodo {
     
     nodo sig, ant;
 
-    public nodo(String tipo, String talla, String id, int unidades, double precio) {
+    public nodo(String tipo, String talla, String id, double precio, int unidades) {
         this.tipo = tipo;
         this.talla = talla;
         this.id = id;
-        this.unidades = unidades;
         this.precio = precio;
+        this.unidades = unidades;
         sig = null;
         ant = null;
     }

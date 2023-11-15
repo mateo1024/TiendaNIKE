@@ -88,7 +88,7 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         historiall = FXCollections.observableArrayList();
         nodos = FXCollections.observableArrayList();
-        // Se crea un objeto File con la ruta del archivo "C:/Prueba/prueba.txt"
+        // Se crea un objeto File con la ruta del archivo "src/tiendanike/Archivo.txt"
         File file = new File("src/tiendanike/Archivo.txt");
 
         try {
@@ -98,7 +98,7 @@ public class FXMLDocumentController implements Initializable {
                 // Se lee una línea del archivo y se divide en partes utilizando la coma como separador
                 String[] line = scanner.nextLine().split(",");
                 // Se crea un objeto "nodo" utilizando los valores obtenidos de la línea
-                nodo nike = new nodo(line[0], line[1], line[2], Integer.parseInt(line[3]), Double.parseDouble(line[4]));
+                nodo nike = new nodo(line[0], line[1], line[2], Double.parseDouble(line[4]), Integer.parseInt(line[3]));
                 // Se agrega el objeto "zap" a la lista "nodos"
                 nodos.add(nike);
             }
@@ -150,7 +150,7 @@ public class FXMLDocumentController implements Initializable {
 
         // Crear un nuevo nodo con los datos ingresados en los campos de texto
         nodo nuevo = new nodo(tip.getText().trim(), tall.getText().trim(), ide.getText().trim(),
-                Integer.parseInt(unidad.getText().trim()), Double.parseDouble(preci.getText().trim()));
+                Double.parseDouble(preci.getText().trim()), Integer.parseInt(unidad.getText().trim()));
 
         // Agregar el nuevo nodo al inicio de la lista
         if (!nodos.isEmpty()) {
@@ -305,65 +305,6 @@ public class FXMLDocumentController implements Initializable {
                 alerta.showAndWait();
             }
         }
-    }
-
-    @FXML
-    private void compra(ActionEvent event) {
-        nodo producto = tabla.getSelectionModel().getSelectedItem();
-
-        if (producto == null) {
-            // Mostrar mensaje de advertencia si no se ha seleccionado ningún producto
-            Alert alerta = new Alert(Alert.AlertType.WARNING);
-            alerta.setHeaderText("No se ha seleccionado ningún producto");
-            alerta.setContentText("Seleccione un producto de la tabla para comprar.");
-            alerta.showAndWait();
-            return;
-        }
-
-        comprarProducto(producto);
-    }
-
-    private void comprarProducto(nodo producto) {
-        // Crear un diálogo para obtener la cantidad de unidades a comprar
-        TextInputDialog dialogo = new TextInputDialog("");
-        dialogo.setTitle("Cantidad a comprar");
-        dialogo.setHeaderText(null);
-        dialogo.setContentText("Ingrese la cantidad a comprar, debe ser menor a " + producto.getUnidades() + "\n");
-        Optional<String> cantidad = dialogo.showAndWait();
-
-        if (!cantidad.isPresent()) {
-            return; // El usuario ha cerrado el diálogo
-        } else if (!cantidad.get().matches("^[1-9]\\d*$")) {
-            // La entrada no es un número entero positivo
-            Alert alerta = new Alert(Alert.AlertType.WARNING);
-            alerta.setHeaderText("Entrada inválida");
-            alerta.setContentText("La cantidad de unidades debe ser un número entero positivo.");
-            alerta.showAndWait();
-            return;
-        }
-
-        int cantidadComprar = Integer.parseInt(cantidad.get());
-
-        if (cantidadComprar > producto.getUnidades()) {
-            // Mostrar mensaje de advertencia si la cantidad de unidades no está disponible
-            Alert ale = new Alert(Alert.AlertType.INFORMATION);
-            ale.setHeaderText("Información");
-            ale.setContentText("La cantidad de unidades no está disponible");
-            ale.showAndWait();
-            return;
-        }
-
-        // Actualizar la cantidad de unidades en el objeto Nodo
-        producto.setUnidades(producto.getUnidades() - cantidadComprar);
-
-        // Actualizar unidades en el archivo
-        actualizarUnidadesArchivo(producto, cantidadComprar);
-
-        // Actualizar la tabla con las nuevas unidades
-        tabla.refresh();
-
-        // Agregar la compra al historial
-        historiall.add("Compra: " + producto.getTipo() + ", Cantidad: " + cantidadComprar + ", Total: $" + (producto.getPrecio() * cantidadComprar));
     }
 
     private void actualizarUnidadesArchivo(nodo producto, int cantidadComprada) {
@@ -575,6 +516,79 @@ public class FXMLDocumentController implements Initializable {
                 + "Unidades: " + productoMenorPrecio.getUnidades() + "\n"
                 + "Precio: $" + productoMenorPrecio.getPrecio());
         alerta.showAndWait();
+    }
+
+    @FXML
+    private void compra(ActionEvent event) {
+        nodo productoSeleccionado = tabla.getSelectionModel().getSelectedItem();
+        if (nodos.isEmpty()) {
+            // Mostrar mensaje si la lista está vacía
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setHeaderText("Lista de productos vacía");
+            alerta.setContentText("No hay productos en la lista para comprar.");
+            alerta.showAndWait();
+            return;
+        }
+
+        if (productoSeleccionado == null) {
+            // Mostrar mensaje de advertencia si no se ha seleccionado ningún producto
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setHeaderText("No se ha seleccionado ningún producto");
+            alerta.setContentText("Seleccione un producto de la tabla para comprar.");
+            alerta.showAndWait();
+            return;
+        }
+
+        // Crear un diálogo para obtener la cantidad de unidades a comprar
+        TextInputDialog dialogo = new TextInputDialog("");
+        dialogo.setTitle("Cantidad a comprar");
+        dialogo.setHeaderText(null);
+        dialogo.setContentText("Ingrese la cantidad a comprar, debe ser menor o igual a " + productoSeleccionado.getUnidades() + ":");
+        Optional<String> cantidad = dialogo.showAndWait();
+
+        if (!cantidad.isPresent()) {
+            return; // El usuario ha cerrado el diálogo
+        } else if (!cantidad.get().matches("^[1-9]\\d*$")) {
+            // La entrada no es un número entero positivo
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setHeaderText("Entrada inválida");
+            alerta.setContentText("La cantidad de unidades debe ser un número entero positivo.");
+            alerta.showAndWait();
+            return;
+        }
+
+        int cantidadComprar = Integer.parseInt(cantidad.get());
+
+        if (cantidadComprar > productoSeleccionado.getUnidades()) {
+            // Mostrar mensaje de advertencia si la cantidad de unidades no está disponible
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setHeaderText("Cantidad no disponible");
+            alerta.setContentText("La cantidad de unidades seleccionada no está disponible.");
+            alerta.showAndWait();
+            return;
+        }
+
+        // Realizar la compra
+        productoSeleccionado.setUnidades(productoSeleccionado.getUnidades() - cantidadComprar);
+
+        // Actualizar lista circular
+        nodo nodoActual = nodos.get(0);
+        do {
+            if (nodoActual.getId().equals(productoSeleccionado.getId())) {
+                nodoActual.setUnidades(productoSeleccionado.getUnidades());
+                break;
+            }
+            nodoActual = nodoActual.getSig();
+        } while (nodoActual != nodos.get(0));
+
+        actualizarUnidadesArchivo(productoSeleccionado, cantidadComprar);
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setHeaderText("Compra Realizada!");
+            alerta.setContentText("El producto comprado es: "+productoSeleccionado.getTipo()+"\n"
+            +"Talla"+productoSeleccionado.getTalla()+"\n"+"El precio es: "+productoSeleccionado.getPrecio()+"\n"
+            +"El Total es:"+(productoSeleccionado.getPrecio() * cantidadComprar));
+            alerta.showAndWait();
+        tabla.refresh();
     }
 
 }
