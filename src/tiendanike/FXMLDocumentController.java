@@ -26,6 +26,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -76,6 +77,12 @@ public class FXMLDocumentController implements Initializable {
     private TextField preci;
     @FXML
     private TextField unidad;
+    @FXML
+    private MenuItem busc;
+    @FXML
+    private MenuItem cambi;
+    @FXML
+    private MenuItem maymen;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -402,6 +409,130 @@ public class FXMLDocumentController implements Initializable {
             // Manejo de excepciones
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void busqueda(ActionEvent event) {
+        // Crear un diálogo para obtener la ID del producto a buscar
+        TextInputDialog dialogo = new TextInputDialog("");
+        dialogo.setTitle("Búsqueda de Producto");
+        dialogo.setHeaderText(null);
+        dialogo.setContentText("Ingrese la ID del producto a buscar:");
+        Optional<String> idProducto = dialogo.showAndWait();
+
+        if (idProducto.isPresent()) {
+            String idBuscada = idProducto.get();
+
+            // Buscar el producto con la ID ingresada en la lista circular
+            nodo productoEncontrado = null;
+            nodo primerNodo = nodos.get(0);
+            nodo nodoActual = primerNodo;
+            do {
+                if (nodoActual.getId().equals(idBuscada)) {
+                    productoEncontrado = nodoActual;
+                    break;
+                }
+                nodoActual = nodoActual.getSig();
+            } while (nodoActual != primerNodo);
+
+            // Mostrar los detalles del producto encontrado en una alerta
+            if (productoEncontrado != null) {
+                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                alerta.setHeaderText("Detalles del Producto");
+                alerta.setContentText("Tipo: " + productoEncontrado.getTipo() + "\n"
+                        + "Talla: " + productoEncontrado.getTalla() + "\n"
+                        + "ID: " + productoEncontrado.getId() + "\n"
+                        + "Unidades: " + productoEncontrado.getUnidades() + "\n"
+                        + "Precio: $" + productoEncontrado.getPrecio());
+                alerta.showAndWait();
+            } else {
+                // Mostrar mensaje si no se encuentra el producto
+                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                alerta.setHeaderText("Producto no encontrado");
+                alerta.setContentText("No se encontró un producto con la ID ingresada.");
+                alerta.showAndWait();
+            }
+        }
+    }
+
+    @FXML
+    private void camunidades(ActionEvent event) {
+        // Crear un diálogo para obtener la ID del producto a modificar las unidades
+        TextInputDialog dialogo = new TextInputDialog("");
+        dialogo.setTitle("Modificar Unidades de Producto");
+        dialogo.setHeaderText(null);
+        dialogo.setContentText("Ingrese la ID del producto a modificar unidades:");
+        Optional<String> idProducto = dialogo.showAndWait();
+
+        if (idProducto.isPresent()) {
+            String idBuscada = idProducto.get();
+
+            // Buscar el producto con la ID ingresada en la lista circular
+            nodo productoEncontrado = null;
+            nodo primerNodo = nodos.get(0);
+            nodo nodoActual = primerNodo;
+            do {
+                if (nodoActual.getId().equals(idBuscada)) {
+                    productoEncontrado = nodoActual;
+                    break;
+                }
+                nodoActual = nodoActual.getSig();
+            } while (nodoActual != primerNodo);
+
+            // Modificar las unidades del producto encontrado
+            if (productoEncontrado != null) {
+                // Diálogo para obtener la cantidad de unidades a modificar
+                TextInputDialog dialogoUnidades = new TextInputDialog("");
+                dialogoUnidades.setTitle("Modificar Unidades");
+                dialogoUnidades.setHeaderText(null);
+                dialogoUnidades.setContentText("Ingrese la nueva cantidad de unidades:");
+
+                Optional<String> nuevasUnidades = dialogoUnidades.showAndWait();
+
+                if (nuevasUnidades.isPresent()) {
+                    try {
+                        int cantidadNueva = Integer.parseInt(nuevasUnidades.get());
+
+                        if (cantidadNueva < 0) {
+                            // Mostrar mensaje si la cantidad es negativa
+                            Alert alerta = new Alert(Alert.AlertType.WARNING);
+                            alerta.setHeaderText("Cantidad inválida");
+                            alerta.setContentText("La cantidad de unidades no puede ser negativa.");
+                            alerta.showAndWait();
+                        } else {
+                            // Modificar las unidades del producto y actualizar en la lista y archivo
+                            int unidadesAnteriores = productoEncontrado.getUnidades();
+                            productoEncontrado.setUnidades(cantidadNueva);
+                            actualizarUnidadesArchivo(productoEncontrado, unidadesAnteriores - cantidadNueva);
+                            tabla.refresh();
+
+                            // Mostrar mensaje de éxito
+                            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                            alerta.setHeaderText("Unidades modificadas");
+                            alerta.setContentText("Las unidades del producto con ID "
+                                    + idBuscada + " se han modificado correctamente.");
+                            alerta.showAndWait();
+                        }
+                    } catch (NumberFormatException e) {
+                        // Mostrar mensaje si la entrada no es un número válido
+                        Alert alerta = new Alert(Alert.AlertType.ERROR);
+                        alerta.setHeaderText("Error");
+                        alerta.setContentText("Ingrese un número válido para las unidades.");
+                        alerta.showAndWait();
+                    }
+                }
+            } else {
+                // Mostrar mensaje si no se encuentra el producto
+                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                alerta.setHeaderText("Producto no encontrado");
+                alerta.setContentText("No se encontró un producto con la ID ingresada.");
+                alerta.showAndWait();
+            }
+        }
+    }
+
+    @FXML
+    private void myn(ActionEvent event) {
     }
 
 }
