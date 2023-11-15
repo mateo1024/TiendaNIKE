@@ -1,14 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <VBox prefHeight="642.0" prefWidth="1072.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tiendanike.VentanaSuetersController">
    <children>
       <Pane prefHeight="792.0" prefWidth="1072.0" style="-fx-background-color: CCE3DE;">
          <children>
-            <Button layoutX="46.0" layoutY="30.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="178.0" text="Principal" />
+            <Button fx:id="VPrincipal" layoutX="46.0" layoutY="30.0" mnemonicParsing="false" onAction="#VentanaPrin" prefHeight="41.0" prefWidth="178.0" style="-fx-background-color: c77dff;" text="Principal" />
+            <ImageView fitHeight="217.0" fitWidth="171.0" layoutX="187.0" layoutY="84.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imagenes/Nike%20Men's%20Therma%20Training%20Hoodie.jpeg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="217.0" fitWidth="171.0" layoutX="187.0" layoutY="370.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imagenes/Designer%20Clothes,%20Shoes%20&amp;%20Bags%20for%20Women%20_%20SSENSE.jpeg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="217.0" fitWidth="178.0" layoutX="717.0" layoutY="84.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imagenes/_%20(2).jpeg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="217.0" fitWidth="171.0" layoutX="460.0" layoutY="84.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imagenes/Nike%20Fleece%20Pullover%20Hoodie.jpeg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="217.0" fitWidth="171.0" layoutX="460.0" layoutY="370.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imagenes/_.jpeg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="217.0" fitWidth="178.0" layoutX="717.0" layoutY="370.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imagenes/Luxury%20fashion%20&amp;%20independent%20designers%20_%20SSENSE.jpeg" />
+               </image>
+            </ImageView>
+            <Label layoutX="250.0" layoutY="312.0" text="\$ 35">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="527.0" layoutY="312.0" text="\$ 50">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="789.0" layoutY="312.0" text="\$43">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="246.0" layoutY="596.0" text="\$50">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="528.0" layoutY="596.0" text="\$39">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="789.0" layoutY="596.0" text="\$28">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Button fx:id="Zapatos" layoutX="806.0" layoutY="30.0" mnemonicParsing="false" onAction="#VentanaZapatos" prefHeight="41.0" prefWidth="178.0" style="-fx-background-color: c77dff;" text="Zapatos" />
          </children>
       </Pane>
    </children>

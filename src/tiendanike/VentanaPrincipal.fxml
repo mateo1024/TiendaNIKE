@@ -36,7 +36,7 @@
       <Button fx:id="Verproductos" layoutX="835.0" layoutY="374.0" mnemonicParsing="false" onAction="#ventanaproductos" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: c77dff;" text="Ver Productos" />
       <Button fx:id="Historial" layoutX="835.0" layoutY="449.0" mnemonicParsing="false" onAction="#historialdeventas" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: c77dff;" text="Historial De Ventas" />
       <Button fx:id="Eliminar" layoutX="835.0" layoutY="524.0" mnemonicParsing="false" onAction="#pop" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: c77dff;" text="Eliminar" />
-      <ImageView fitHeight="326.0" fitWidth="332.0" layoutX="817.0" layoutY="-25.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="326.0" fitWidth="332.0" layoutX="800.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../Imágenes/580b57fcd9996e24bc43c4f3.png" />
          </image>
