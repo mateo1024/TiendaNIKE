@@ -533,6 +533,48 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void myn(ActionEvent event) {
+        if (nodos.isEmpty()) {
+            // Mostrar mensaje si la lista está vacía
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setHeaderText("Lista vacía");
+            alerta.setContentText("No hay productos en la lista.");
+            alerta.showAndWait();
+            return;
+        }
+
+        nodo productoMayorPrecio = nodos.get(0);
+        nodo productoMenorPrecio = nodos.get(0);
+
+        nodo nodoActual = nodos.get(0).getSig();
+
+        do {
+            if (nodoActual.getPrecio() > productoMayorPrecio.getPrecio()) {
+                productoMayorPrecio = nodoActual;
+            }
+
+            if (nodoActual.getPrecio() < productoMenorPrecio.getPrecio()) {
+                productoMenorPrecio = nodoActual;
+            }
+
+            nodoActual = nodoActual.getSig();
+        } while (nodoActual != nodos.get(0));
+
+        // Mostrar los productos con mayor y menor precio en una alerta
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setHeaderText("Productos con Mayor y Menor Precio");
+        alerta.setContentText("Producto con mayor precio:\n\n"
+                + "Tipo: " + productoMayorPrecio.getTipo() + "\n"
+                + "Talla: " + productoMayorPrecio.getTalla() + "\n"
+                + "ID: " + productoMayorPrecio.getId() + "\n"
+                + "Unidades: " + productoMayorPrecio.getUnidades() + "\n"
+                + "Precio: $" + productoMayorPrecio.getPrecio() + "\n\n"
+                + "Producto con menor precio:\n\n"
+                + "Tipo: " + productoMenorPrecio.getTipo() + "\n"
+                + "Talla: " + productoMenorPrecio.getTalla() + "\n"
+                + "ID: " + productoMenorPrecio.getId() + "\n"
+                + "Unidades: " + productoMenorPrecio.getUnidades() + "\n"
+                + "Precio: $" + productoMenorPrecio.getPrecio());
+        alerta.showAndWait();
     }
 
 }
