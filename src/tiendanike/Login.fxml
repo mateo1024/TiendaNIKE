@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -25,8 +27,13 @@
             <TextField fx:id="tx1" layoutX="171.0" layoutY="219.0" prefHeight="28.0" prefWidth="193.0" />
             <TextField fx:id="tx2" layoutX="171.0" layoutY="273.0" prefHeight="28.0" prefWidth="193.0" />
             <Separator layoutY="166.0" prefHeight="4.0" prefWidth="428.0" />
-            <Button layoutX="99.0" layoutY="342.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="101.0" style="-fx-background-color: c77dff;" text="Entrar" />
-            <Button layoutX="229.0" layoutY="342.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="101.0" style="-fx-background-color: c77dff;" text="Salir" />
+            <Button fx:id="ent" layoutX="99.0" layoutY="342.0" mnemonicParsing="false" onAction="#log" prefHeight="54.0" prefWidth="101.0" style="-fx-background-color: c77dff;" text="Entrar" />
+            <Button fx:id="sal" layoutX="229.0" layoutY="342.0" mnemonicParsing="false" onAction="#exit" prefHeight="54.0" prefWidth="101.0" style="-fx-background-color: c77dff;" text="Salir" />
+            <ImageView fitHeight="111.0" fitWidth="210.0" layoutX="124.0" layoutY="30.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imagenes/5a7f5f1fabc3d121aba71180.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>
