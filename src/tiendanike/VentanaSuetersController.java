@@ -55,7 +55,9 @@ public class VentanaSuetersController implements Initializable {
         stage.show();
     }
     @FXML
-    private void VentanaZapatos(ActionEvent event) {
+    private void VentanaZapatos(ActionEvent event) throws IOException{
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        openWindow("VentanaZapatos.fxml", stage);
     }
     
 }
