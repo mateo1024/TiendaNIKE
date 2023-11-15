@@ -334,6 +334,78 @@ public class FXMLDocumentController implements Initializable {
     private void ventanaproductos(ActionEvent event) {
     }
 
-    
+    @FXML
+    private void historialdeventas(ActionEvent event) {
+        if (historiall.isEmpty()) {
+            // Mostrar mensaje de advertencia si no hay compras en el historial
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setHeaderText("Historial de Compras");
+            alerta.setContentText("Listado.");
+            alerta.showAndWait();
+        } else {
+            // Crear una cadena que contenga el historial de compras
+            StringBuilder historial = new StringBuilder();
+            for (String compra : historiall) {
+                historial.append(compra).append("\n");
+            }
+
+            // Mostrar el historial de compras en una alerta
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setHeaderText("Historial de Compras");
+            alerta.setContentText(historial.toString());
+            alerta.showAndWait();
+        }
+    }
+
+    @FXML
+    private void pop(ActionEvent event) {
+        // Verificar si la pila no está vacía
+        if (!nodos.isEmpty()) {
+            // Eliminar el último elemento de la pila
+            nodos.remove(nodos.size() - 1);
+
+            // Abre el archivo para lectura y escritura
+            String archivoRuta = "src/tiendanike/Archivo.txt";
+            File archivo = new File(archivoRuta);
+
+            try {
+                // Crear un ObservableList para almacenar las líneas del archivo
+                ObservableList<String> lineas = FXCollections.observableArrayList();
+
+                // Leer todo el contenido del archivo y almacenarlo en el ObservableList
+                Scanner scanner = new Scanner(archivo);
+                while (scanner.hasNextLine()) {
+                    lineas.add(scanner.nextLine());
+                }
+                scanner.close();
+
+                // Abre el archivo nuevamente para escritura
+                FileWriter fileWriter = new FileWriter(archivoRuta);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+                // Escribir todas las líneas en el archivo, excepto la última
+                for (int i = 0; i < lineas.size() - 1; i++) {
+                    bufferedWriter.write(lineas.get(i));
+                    bufferedWriter.newLine();
+                }
+
+                // Cerrar el BufferedWriter
+                bufferedWriter.close();
+
+                // Mostrar un mensaje de éxito
+                Alert ale = new Alert(Alert.AlertType.INFORMATION);
+                ale.setHeaderText("Información");
+                ale.setContentText("Elemento eliminado al final de la lista y del archivo!");
+                ale.showAndWait();
+                tabla.refresh();
+            } catch (IOException e) {
+                // Mostrar un mensaje de error en caso de excepción
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText("Error al eliminar");
+                alerta.setContentText("Se produjo un error al eliminar el elemento del archivo.");
+                alerta.showAndWait();
+            }
+        }
+    }
 
 }
