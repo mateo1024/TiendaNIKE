@@ -4,8 +4,12 @@
  */
 package tiendanike;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,6 +38,8 @@ public class LoginController implements Initializable {
     private Button ent;
     @FXML
     private Button sal;
+    @FXML
+    private Button regis;
 
     /**
      * Initializes the controller class.
@@ -41,8 +47,37 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
+    private static final String ARCHIVO_DATOS = "datos.txt";
+    private Map<String, String> datosUsuarios;
+
+    public LoginController() {
+        datosUsuarios = cargarDatos();
+    }
+
+    private Map<String, String> cargarDatos() {
+        Map<String, String> datos = new HashMap<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("src/tiendanike/Registro.txt"))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] partes = linea.split(",");
+                if (partes.length == 2) {
+                    String usuario = partes[0].trim();
+                    String contrasena = partes[1].trim();
+                    datos.put(usuario, contrasena);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return datos;
+    }
+
+    public boolean verificarDatos(String usuario, String contrasena) {
+        String contrasenaAlmacenada = datosUsuarios.get(usuario);
+        return contrasenaAlmacenada != null && contrasenaAlmacenada.equals(contrasena);
+    }
+
     public void openwindows(Stage previousStage) throws IOException {
 
         Stage newStage = new Stage();
@@ -64,19 +99,23 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    private void log(ActionEvent event) throws IOException{
-        if (tx1.getText().equalsIgnoreCase("NIKE") && tx2.getText().equals("1964")) {
-            // Crear una nueva ventana e invocar el método openVentanaTabla
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // Obten la referencia al Stage actual
+    private void log(ActionEvent event) throws IOException {
+        String usuario = tx1.getText();
+        String contrasena = tx2.getText();
+
+        LoginController verificador = new LoginController();
+        boolean datosValidos = verificador.verificarDatos(usuario, contrasena);
+
+        if (datosValidos) {
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             openwindows(currentStage);
             tx1.setText("");
-            tx1.setText("");
-        } else if ((tx1.getText() == null ? ("NIKE") != null : !tx1.getText().equalsIgnoreCase("Cooperativa")) && tx1.getText() != ("1964")) {
-            // Mostrar un cuadro de diálogo de alerta si los datos de inicio de sesión son incorrectos
+            tx2.setText("");
+        } else {
             Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-            alerta.setTitle("Datos No Validos");
+            alerta.setTitle("Datos No Válidos");
             alerta.setHeaderText("Ingrese nuevamente los datos");
-            alerta.setContentText("Los datos ingresados no son validos");
+            alerta.setContentText("Los datos ingresados no son válidos");
             alerta.showAndWait();
         }
     }
@@ -84,5 +123,23 @@ public class LoginController implements Initializable {
     @FXML
     private void exit(ActionEvent event) {
         System.exit(0);
+    }
+
+    private void openWindow(String fxmlFileName, Stage stage) throws IOException {
+        // Crear un nuevo cargador de FXML
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
+        // Cargar el archivo FXML y asignarlo como la raíz de la ventana
+        Parent root = loader.load();
+        // Crear una nueva escena con la raíz cargada
+        Scene scene = new Scene(root);
+        // Establecer la nueva escena como la escena de la ventana
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    private void registrar(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        openWindow("Register.fxml", stage);
     }
 }

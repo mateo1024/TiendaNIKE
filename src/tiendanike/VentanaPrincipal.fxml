@@ -12,7 +12,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="642.0" prefWidth="1157.0" style="-fx-background-color: CCE3DE;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tiendanike.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="642.0" prefWidth="1157.0" style="-fx-background-color: f7f7ff;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tiendanike.FXMLDocumentController">
     <children>
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
       <TableView fx:id="tabla" layoutX="14.0" layoutY="221.0" prefHeight="410.0" prefWidth="725.0">
@@ -29,16 +29,16 @@
       <Label layoutX="506.0" layoutY="59.0" text="ID" />
       <Label layoutX="282.0" layoutY="129.0" text="Precio" />
       <Label layoutX="508.0" layoutY="129.0" text="Unidades" />
-      <Button fx:id="añadir" layoutX="40.0" layoutY="149.0" mnemonicParsing="false" onAction="#push" prefHeight="45.0" prefWidth="208.0" style="-fx-background-color: c77dff;" text="Añadir" />
+      <Button fx:id="añadir" layoutX="40.0" layoutY="149.0" mnemonicParsing="false" onAction="#push" prefHeight="45.0" prefWidth="208.0" style="-fx-background-color: a2d2ff;" text="Añadir" />
       <TextField fx:id="tip" layoutX="41.0" layoutY="85.0" prefHeight="28.0" prefWidth="208.0" />
       <TextField fx:id="tall" layoutX="280.0" layoutY="85.0" prefHeight="28.0" prefWidth="191.0" />
       <TextField fx:id="ide" layoutX="506.0" layoutY="85.0" prefHeight="28.0" prefWidth="191.0" />
       <TextField fx:id="preci" layoutX="282.0" layoutY="157.0" prefHeight="28.0" prefWidth="191.0" />
       <TextField fx:id="unidad" layoutX="508.0" layoutY="157.0" prefHeight="28.0" prefWidth="191.0" />
-      <Button fx:id="comprar" layoutX="835.0" layoutY="301.0" mnemonicParsing="false" onAction="#compra" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: c77dff;" text="Comprar" />
-      <Button fx:id="Verproductos" layoutX="835.0" layoutY="374.0" mnemonicParsing="false" onAction="#ventanaproductos" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: c77dff;" text="Ver Productos" />
-      <Button fx:id="Historial" layoutX="835.0" layoutY="449.0" mnemonicParsing="false" onAction="#historialdeventas" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: c77dff;" text="Historial De Ventas" />
-      <Button fx:id="Eliminar" layoutX="835.0" layoutY="524.0" mnemonicParsing="false" onAction="#pop" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: c77dff;" text="Eliminar" />
+      <Button fx:id="comprar" layoutX="835.0" layoutY="301.0" mnemonicParsing="false" onAction="#compra" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: a2d2ff;" text="Comprar" />
+      <Button fx:id="Verproductos" layoutX="835.0" layoutY="374.0" mnemonicParsing="false" onAction="#ventanaproductos" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: a2d2ff;" text="Ver Productos" />
+      <Button fx:id="Historial" layoutX="835.0" layoutY="449.0" mnemonicParsing="false" onAction="#historialdeventas" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: a2d2ff;" text="Historial De Ventas" />
+      <Button fx:id="Eliminar" layoutX="835.0" layoutY="524.0" mnemonicParsing="false" onAction="#pop" prefHeight="45.0" prefWidth="238.0" style="-fx-background-color: a2d2ff;" text="Eliminar" />
       <ImageView fitHeight="161.0" fitWidth="238.0" layoutX="831.0" layoutY="53.0" pickOnBounds="true">
          <image>
             <Image url="@../imagenes/5a7f5f1fabc3d121aba71180.png" />
