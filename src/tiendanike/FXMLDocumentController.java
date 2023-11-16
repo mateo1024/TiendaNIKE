@@ -518,38 +518,73 @@ public class FXMLDocumentController implements Initializable {
         alerta.showAndWait();
     }
 
+// Método para actualizar el archivo con la nueva cantidad de unidades
+    private void actualizarArchivo(nodo producto, int cantidadComprada) {
+        String rutaArchivo = "src/tiendanike/Archivo.txt";
+
+        try {
+            File archivo = new File(rutaArchivo);
+            Scanner scanner = new Scanner(archivo);
+            StringBuilder contenidoArchivo = new StringBuilder();
+
+            while (scanner.hasNextLine()) {
+                contenidoArchivo.append(scanner.nextLine()).append("\n");
+            }
+            scanner.close();
+
+            String idProducto = producto.getId();
+
+            String[] lineas = contenidoArchivo.toString().split("\\n");
+            for (int i = 0; i < lineas.length; i++) {
+                String[] elementos = lineas[i].split(",");
+                if (elementos.length >= 5 && elementos[2].equals(idProducto)) {
+                    int unidades = Integer.parseInt(elementos[3]);
+                    unidades -= cantidadComprada;
+                    elementos[3] = Integer.toString(unidades);
+                    lineas[i] = String.join(",", elementos);
+                    break;
+                }
+            }
+
+            FileWriter fileWriter = new FileWriter(rutaArchivo);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            for (String linea : lineas) {
+                bufferedWriter.write(linea);
+                bufferedWriter.newLine();
+            }
+
+            bufferedWriter.close();
+        } catch (IOException e) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText("Error al actualizar el archivo");
+            alerta.setContentText("Se produjo un error al actualizar el archivo.");
+            alerta.showAndWait();
+        }
+    }
+
     @FXML
     private void compra(ActionEvent event) {
         nodo productoSeleccionado = tabla.getSelectionModel().getSelectedItem();
-        if (nodos.isEmpty()) {
-            // Mostrar mensaje si la lista está vacía
-            Alert alerta = new Alert(Alert.AlertType.WARNING);
-            alerta.setHeaderText("Lista de productos vacía");
-            alerta.setContentText("No hay productos en la lista para comprar.");
-            alerta.showAndWait();
-            return;
-        }
 
         if (productoSeleccionado == null) {
             // Mostrar mensaje de advertencia si no se ha seleccionado ningún producto
             Alert alerta = new Alert(Alert.AlertType.WARNING);
-            alerta.setHeaderText("No se ha seleccionado ningún producto");
+            alerta.setHeaderText("Producto no seleccionado");
             alerta.setContentText("Seleccione un producto de la tabla para comprar.");
             alerta.showAndWait();
             return;
         }
 
-        // Crear un diálogo para obtener la cantidad de unidades a comprar
         TextInputDialog dialogo = new TextInputDialog("");
         dialogo.setTitle("Cantidad a comprar");
         dialogo.setHeaderText(null);
-        dialogo.setContentText("Ingrese la cantidad a comprar, debe ser menor o igual a " + productoSeleccionado.getUnidades() + ":");
+        dialogo.setContentText("Ingrese la cantidad a comprar (disponibles: " + productoSeleccionado.getUnidades() + "):");
         Optional<String> cantidad = dialogo.showAndWait();
 
         if (!cantidad.isPresent()) {
-            return; // El usuario ha cerrado el diálogo
+            return;
         } else if (!cantidad.get().matches("^[1-9]\\d*$")) {
-            // La entrada no es un número entero positivo
             Alert alerta = new Alert(Alert.AlertType.WARNING);
             alerta.setHeaderText("Entrada inválida");
             alerta.setContentText("La cantidad de unidades debe ser un número entero positivo.");
@@ -560,7 +595,6 @@ public class FXMLDocumentController implements Initializable {
         int cantidadComprar = Integer.parseInt(cantidad.get());
 
         if (cantidadComprar > productoSeleccionado.getUnidades()) {
-            // Mostrar mensaje de advertencia si la cantidad de unidades no está disponible
             Alert alerta = new Alert(Alert.AlertType.INFORMATION);
             alerta.setHeaderText("Cantidad no disponible");
             alerta.setContentText("La cantidad de unidades seleccionada no está disponible.");
@@ -568,29 +602,89 @@ public class FXMLDocumentController implements Initializable {
             return;
         }
 
-        // Realizar la compra
+        // Realizar la compra: Actualizar la cantidad de unidades en el producto seleccionado
         productoSeleccionado.setUnidades(productoSeleccionado.getUnidades() - cantidadComprar);
 
-        // Actualizar lista circular
-        nodo nodoActual = nodos.get(0);
-        do {
-            if (nodoActual.getId().equals(productoSeleccionado.getId())) {
-                nodoActual.setUnidades(productoSeleccionado.getUnidades());
-                break;
-            }
-            nodoActual = nodoActual.getSig();
-        } while (nodoActual != nodos.get(0));
+        // Actualizar el archivo con la nueva cantidad de unidades
+        actualizaArchivo(productoSeleccionado, cantidadComprar);
 
-        actualizarUnidadesArchivo(productoSeleccionado, cantidadComprar);
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-            alerta.setHeaderText("Compra Realizada!");
-            alerta.setContentText("El producto comprado es: "+productoSeleccionado.getTipo()+"\n"
-            +"Talla"+productoSeleccionado.getTalla()+"\n"+"El precio es: "+productoSeleccionado.getPrecio()+"\n"
-            +"El Total es:"+(productoSeleccionado.getPrecio() * cantidadComprar));
-            alerta.showAndWait();
+        double totalPagar = productoSeleccionado.getPrecio() * cantidadComprar;
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setHeaderText("Confirmar compra");
+        confirmacion.setContentText("Precio unitario: $" + productoSeleccionado.getPrecio() + "\nCantidad a comprar: " + cantidadComprar + "\nTotal a pagar: $" + totalPagar);
+        Optional<ButtonType> result = confirmacion.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Registrar la compra en el historial (aquí puedes implementar tu lógica para el historial)
+            registrarCompraEnHistorial(productoSeleccionado, cantidadComprar, totalPagar);
+        }
+
+        if (productoSeleccionado.getUnidades() <= 0) {
+            nodos.remove(productoSeleccionado);
+
+            tabla.setItems(null);
+            tabla.layout();
+            tabla.setItems(FXCollections.observableList(nodos));
+
+            Alert informacion = new Alert(Alert.AlertType.INFORMATION);
+            informacion.setHeaderText("Unidades agotadas");
+            informacion.setContentText("No quedan unidades disponibles para este producto.");
+            informacion.showAndWait();
+        }
+
         tabla.refresh();
-        historiall.add("Compra: "+productoSeleccionado.getTipo()+"\n"+"Cantidad: "+productoSeleccionado.getUnidades()+"\n"
-                +"Total: "+(productoSeleccionado.getPrecio() * cantidadComprar));
+    }
+
+    private void actualizaArchivo(nodo producto, int cantidadComprada) {
+        String rutaArchivo = "src/tiendanike/Archivo.txt";
+
+        try {
+            File archivo = new File(rutaArchivo);
+            Scanner scanner = new Scanner(archivo);
+            StringBuilder contenidoArchivo = new StringBuilder();
+
+            while (scanner.hasNextLine()) {
+                contenidoArchivo.append(scanner.nextLine()).append("\n");
+            }
+            scanner.close();
+
+            String idProducto = producto.getId();
+
+            String[] lineas = contenidoArchivo.toString().split("\\n");
+            for (int i = 0; i < lineas.length; i++) {
+                String[] elementos = lineas[i].split(",");
+                if (elementos.length >= 5 && elementos[2].equals(idProducto)) {
+                    int unidades = Integer.parseInt(elementos[3]);
+                    unidades -= cantidadComprada;
+                    elementos[3] = Integer.toString(unidades);
+                    lineas[i] = String.join(",", elementos);
+                    break;
+                }
+            }
+
+            FileWriter fileWriter = new FileWriter(rutaArchivo);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            for (String linea : lineas) {
+                bufferedWriter.write(linea);
+                bufferedWriter.newLine();
+            }
+
+            bufferedWriter.close();
+        } catch (IOException e) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText("Error al actualizar el archivo");
+            alerta.setContentText("Se produjo un error al actualizar el archivo.");
+            alerta.showAndWait();
+        }
+    }
+
+// Método para registrar la compra en el historial (puedes implementar tu lógica para el historial aquí)
+    private void registrarCompraEnHistorial(nodo producto, int cantidad, double total) {
+        String detalleCompra = "Compra: " + producto.getTipo() + ", Cantidad: " + cantidad + ", Total: $" + total;
+
+        // Agregar el detalle de la compra al historial
+        historiall.add(detalleCompra);
     }
 
 }
